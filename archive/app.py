@@ -8,8 +8,8 @@ import os
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 # Twitter API keys (ensure these are correct)
-client_id = 'amRoZ2N3Z1A5VnVfenNjcGdjMFA6MTpjaQ'
-client_secret = '-eI07LGBfUhvV-ayWRNKOJ8n0P5QDBBnAyIi1lKGiE2klFjv0v'
+client_id = ''
+client_secret = ''
 redirect_uri = 'http://localhost:8000/callback'
 authorization_response = None
 

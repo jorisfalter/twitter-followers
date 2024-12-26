@@ -2,4 +2,6 @@
 
 Vanity Project
 
-Goal is to figure out who my most important followers are
+Goal is to figure out who my most important twitter followers are
+
+after figuring it out, I might use AI to give a quick summary of your top 5 followers, and how they might be relevant to you
