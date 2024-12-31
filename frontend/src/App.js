@@ -9,10 +9,41 @@ function App() {
       .then((response) => response.json())
       .then((data) => {
         // Use only the top 5 entries
-        setData(data.slice(0, 5));
+        setData(data.slice(0, 10));
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
+
+  const formatFollowers = (count) => {
+    if (count >= 1e6) {
+      return (count / 1e6).toFixed(1) + "M Followers";
+    } else if (count >= 1e3) {
+      return (count / 1e3).toFixed(1) + "K Followers";
+    }
+    return count + " Followers";
+  };
+
+  const makeLinksClickable = (text) => {
+    // Convert URLs into clickable links
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const twitterHandleRegex = /@(\w+)/g;
+
+    const linkedText = text
+      ?.replace(
+        urlRegex,
+        (url) =>
+          `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
+      )
+      ?.replace(
+        twitterHandleRegex,
+        (handle) =>
+          `<a href="https://twitter.com/${handle.slice(
+            1
+          )}" target="_blank" rel="noopener noreferrer">${handle}</a>`
+      );
+
+    return { __html: linkedText };
+  };
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
@@ -47,9 +78,25 @@ function App() {
                   }}
                 />
               </td>
-              <td style={styles.cell}>{follower.name}</td>
-              <td style={styles.cell}>{follower.followers_count}</td>
-              <td style={styles.cell}>{follower.description || "N/A"}</td>
+              <td style={styles.cell}>
+                <a
+                  href={`https://twitter.com/${follower.screen_name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: "none", color: "blue" }}
+                >
+                  {follower.name}
+                </a>
+              </td>
+              <td style={styles.cell}>
+                {formatFollowers(follower.followers_count)}
+              </td>
+              <td
+                style={styles.cell}
+                dangerouslySetInnerHTML={makeLinksClickable(
+                  follower.description || "N/A"
+                )}
+              ></td>
               <td style={styles.cell}>{follower.location || "N/A"}</td>
             </tr>
           ))}

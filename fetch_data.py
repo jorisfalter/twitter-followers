@@ -69,7 +69,7 @@ with open('extracted_data.json', 'w') as json_file:  # Open a JSON file for writ
     json.dump(extracted_data, json_file, indent=4)  # Write the data to the file with indentation
 
 # Extract the top 5 items with the highest followers_count
-top_items = sorted(items_list, key=lambda x: x.get("followers_count", 0), reverse=True)[:5]  # Sort and slice the top 5
+top_items = sorted(items_list, key=lambda x: x.get("followers_count", 0), reverse=True)[:10]  # Sort and slice the top 5
 
 # Prepare the data for the top items
 top_extracted_data = []  # Initialize an empty list for top extracted data
