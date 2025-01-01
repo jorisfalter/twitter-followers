@@ -12,7 +12,7 @@ client = ApifyClient(os.getenv("APIFY_API_TOKEN"))  # Use the environment variab
 run_input = {
     "user_names": ["jorisfalter"],
     # "user_ids": [1846987139428635000],
-    # "maxFollowers": 100,
+    "maxFollowers": 400,
     # "maxFollowings": 100,
     "getFollowers": True,
     "getFollowing": False,
@@ -21,27 +21,20 @@ run_input = {
 # Initialize an empty list to store all items
 all_items = []  # This will hold all fetched items
 
-# Fetch items with pagination
-next_page = True  # Flag to control pagination
-cursor = ""  # Initialize cursor for pagination
-page_number = 1  # Initialize page number
+# Fetch items without pagination
+run = client.actor("C2Wk3I6xAqC4Xi63f").call(run_input=run_input)  # Call the API once
 
-while next_page and page_number <= 2:  # Continue fetching until there are no more pages or after the second page
-    print(f"Fetching page {page_number}...")  # Print the current page number
-    # Update the run_input with the current cursor
-    run_input["cursor"] = cursor  # Set the cursor for pagination
-    run = client.actor("C2Wk3I6xAqC4Xi63f").call(run_input=run_input)  # Call the API
+# Fetch Actor results from the run's dataset
+items = client.dataset(run["defaultDatasetId"]).iterate_items()
+items_list = list(items)  # Convert the generator to a list
 
-    # Fetch Actor results from the run's dataset
-    items = client.dataset(run["defaultDatasetId"]).iterate_items()
-    items_list = list(items)  # Convert the generator to a list
+print(f"Received {len(items_list)} items.")  # Log the number of items received
 
-    if items_list:  # Check if the list is not empty
-        all_items.extend(items_list)  # Add the fetched items to the all_items list
-        cursor = run.get("nextCursor", "")  # Update the cursor for the next page
-        page_number += 1  # Increment the page number
-    else:
-        next_page = False  # No more items to fetch
+if items_list:  # Check if the list is not empty
+    all_items.extend(items_list)  # Add the fetched items to the all_items list
+    print(f"Next cursor: '{run.get('nextCursor', '')}'")  # Log the next cursor value
+else:
+    print("No items to write to CSV.")  # Handle the case where there are no items
 
 # Export results to a CSV file
 with open('results.csv', mode='w', newline='') as csv_file:  # Open a CSV file for writing
