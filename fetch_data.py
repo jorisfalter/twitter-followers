@@ -18,25 +18,43 @@ run_input = {
     "getFollowing": False,
 }
 
-# Run the Actor and wait for it to finish
-run = client.actor("C2Wk3I6xAqC4Xi63f").call(run_input=run_input)
+# Initialize an empty list to store all items
+all_items = []  # This will hold all fetched items
 
-# Fetch Actor results from the run's dataset (if there are any)
-items = client.dataset(run["defaultDatasetId"]).iterate_items()
+# Fetch items with pagination
+next_page = True  # Flag to control pagination
+cursor = ""  # Initialize cursor for pagination
+page_number = 1  # Initialize page number
+
+while next_page and page_number <= 2:  # Continue fetching until there are no more pages or after the second page
+    print(f"Fetching page {page_number}...")  # Print the current page number
+    # Update the run_input with the current cursor
+    run_input["cursor"] = cursor  # Set the cursor for pagination
+    run = client.actor("C2Wk3I6xAqC4Xi63f").call(run_input=run_input)  # Call the API
+
+    # Fetch Actor results from the run's dataset
+    items = client.dataset(run["defaultDatasetId"]).iterate_items()
+    items_list = list(items)  # Convert the generator to a list
+
+    if items_list:  # Check if the list is not empty
+        all_items.extend(items_list)  # Add the fetched items to the all_items list
+        cursor = run.get("nextCursor", "")  # Update the cursor for the next page
+        page_number += 1  # Increment the page number
+    else:
+        next_page = False  # No more items to fetch
 
 # Export results to a CSV file
 with open('results.csv', mode='w', newline='') as csv_file:  # Open a CSV file for writing
-    items_list = list(items)  # Convert the generator to a list
-    if items_list:  # Check if the list is not empty
+    if all_items:  # Check if the list is not empty
         # Collect all unique field names from all items
         fieldnames = set()
-        for item in items_list:
+        for item in all_items:
             fieldnames.update(item.keys())  # Add keys from each item to the set
         fieldnames = list(fieldnames)  # Convert the set back to a list
 
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)  # Create a CSV writer object
         writer.writeheader()  # Write the header row
-        for item in items_list:  # Iterate through the items
+        for item in all_items:  # Iterate through the items
             writer.writerow(item)  # Write each item as a row in the CSV file
     else:
         print("No items to write to CSV.")  # Handle the case where there are no items
@@ -45,7 +63,7 @@ with open('results.csv', mode='w', newline='') as csv_file:  # Open a CSV file f
 extracted_data = []  # Initialize an empty list to store extracted data
 
 # Iterate through the items and extract specified fields
-for item in items_list:  # Iterate through the items
+for item in all_items:  # Iterate through the items
     extracted_item = {
         "Location": item.get("location"),
         "Followers_count": item.get("followers_count"),
@@ -69,7 +87,7 @@ with open('extracted_data.json', 'w') as json_file:  # Open a JSON file for writ
     json.dump(extracted_data, json_file, indent=4)  # Write the data to the file with indentation
 
 # Extract the top 5 items with the highest followers_count
-top_items = sorted(items_list, key=lambda x: x.get("followers_count", 0), reverse=True)[:10]  # Sort and slice the top 5
+top_items = sorted(all_items, key=lambda x: x.get("followers_count", 0), reverse=True)[:10]  # Sort and slice the top 5
 
 # Prepare the data for the top items
 top_extracted_data = []  # Initialize an empty list for top extracted data
