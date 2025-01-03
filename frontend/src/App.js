@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 
+// this is the react frontend
+
 function App() {
   const [twitterHandle, setTwitterHandle] = useState(""); // State for the entered Twitter handle
+  const [followerCount, setFollowerCount] = useState(null); // State for follower count
   const [data, setData] = useState([]); // State for followers data
   const [loading, setLoading] = useState(false); // State for loading
   const [error, setError] = useState(""); // State for errors
@@ -12,17 +15,25 @@ function App() {
       setError("Twitter handle cannot be empty.");
       return;
     }
+
     setLoading(true);
     setError("");
-    fetch(`http://127.0.0.1:5000/api/followers?handle=${twitterHandle}`) // Replace with your API URL
+    setFollowerCount(null);
+    console.log("fetching data");
+    fetch(`http://127.0.0.1:5000/api/fetch_followers?handle=${twitterHandle}`) // Replace with your backend URL
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Failed to fetch followers.");
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
         }
+        console.log(response);
         return response.json();
       })
       .then((data) => {
-        setData(data); // Fetch all entries instead of top 5
+        console.log(data);
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        setFollowerCount(data.sub_count);
         setLoading(false);
       })
       .catch((err) => {
@@ -105,6 +116,12 @@ function App() {
           </form>
           {loading && <p>Loading...</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
+          {followerCount !== null && (
+            <p>
+              The Twitter handle <strong>@{twitterHandle}</strong> has{" "}
+              <strong>{followerCount.toLocaleString()}</strong> followers.
+            </p>
+          )}
         </div>
       )}
       {/* Render followers table if data is available */}
