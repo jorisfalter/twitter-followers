@@ -41,7 +41,9 @@ function App() {
         setFollowerCount(followerData.sub_count);
 
         // Fetch a preview version of the followers list
-        return fetch("http://127.0.0.1:5000/api/followers");
+        return fetch(
+          `http://127.0.0.1:5000/api/followers?handle=${twitterHandle}`
+        );
       })
       .then((response) => {
         if (!response.ok) {
@@ -111,6 +113,24 @@ function App() {
     setShowEmailPopup(false); // Close email popup after submission
     setEmail(""); // Reset email input
     setPaymentSucceeded(true); // Set payment succeeded state to true
+    // Fetch the full list after payment
+    fetch(
+      `http://127.0.0.1:5000/api/followersFull?handle=${twitterHandle}&full=true`
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((followersList) => {
+        setData(followersList);
+        setPaymentSucceeded(false); // Hide the payment success message once data is loaded
+      })
+      .catch((err) => {
+        setError(err.message);
+        setPaymentSucceeded(false);
+      });
   };
 
   const calculatePrice = (count) => {

@@ -37,12 +37,12 @@ def fetch_followers_amount(twitter_handle, mock_result):
 def fetch_followers_list(twitter_handle, preview_run, limitOn):
     
     if limitOn is True:
-        maxFollowers = 26;
+        maxFollowers = 200;
     elif limitOn is False:
         maxFollowers = 200; # change this when in production!
 
     if preview_run is True:
-        maxFollowers = 25;
+        maxFollowers = 200;
 
     print(maxFollowers)
 
@@ -50,7 +50,7 @@ def fetch_followers_list(twitter_handle, preview_run, limitOn):
         "user_names": [twitter_handle],
         # "user_ids": [1846987139428635000],
         "maxFollowers": maxFollowers,
-        # "maxFollowings": 100,
+        "maxFollowings": 200, # has to be on apparently 
         "getFollowers": True,
         "getFollowing": False,
     }
@@ -73,6 +73,8 @@ def fetch_followers_list(twitter_handle, preview_run, limitOn):
     else:
         print("No items")  # Handle the case where there are no items
 
+    # print(all_items)
+
     # # Export results to a CSV file
     # with open('results.csv', mode='w', newline='') as csv_file:  # Open a CSV file for writing
     #     if all_items:  # Check if the list is not empty
@@ -89,46 +91,48 @@ def fetch_followers_list(twitter_handle, preview_run, limitOn):
     #     else:
     #         print("No items to write to CSV.")  # Handle the case where there are no items
 
-    # Prepare to collect specific fields into a list
-    extracted_data = []  # Initialize an empty list to store extracted data
+    # # Prepare to collect specific fields into a list
+    # extracted_data = []  # Initialize an empty list to store extracted data
 
-    # Iterate through the items and extract specified fields
-    for item in all_items:  # Iterate through the items
-        extracted_item = {
-            "Location": item.get("location"),
-            "Followers_count": item.get("followers_count"),
-            "Url": item.get("url"),
-            "Status": item.get("status"),
-            "Description": item.get("description"),
-            "profile_background_image_url": item.get("profile_background_image_url"),
-            "normal_followers_count": item.get("normal_followers_count"),
-            "screen_name": item.get("screen_name"),
-            "profile_banner_url": item.get("profile_banner_url"),
-            "entities": item.get("entities"),
-            "profile_image_url_https": item.get("profile_image_url_https"),
-            "profile_image_url": item.get("profile_image_url"),
-            "pinned_tweet_ids": item.get("pinned_tweet_ids"),
-            "name": item.get("name"),
-        }
-        extracted_data.append(extracted_item)  # Add the extracted item to the list
+    # # Iterate through the items and extract specified fields
+    # for item in all_items:  # Iterate through the items
+    #     extracted_item = {
+    #         "Location": item.get("location"),
+    #         "Followers_count": item.get("followers_count"),
+    #         "Url": item.get("url"),
+    #         "Status": item.get("status"),
+    #         "Description": item.get("description"),
+    #         "profile_background_image_url": item.get("profile_background_image_url"),
+    #         "normal_followers_count": item.get("normal_followers_count"),
+    #         "screen_name": item.get("screen_name"),
+    #         "profile_banner_url": item.get("profile_banner_url"),
+    #         "entities": item.get("entities"),
+    #         "profile_image_url_https": item.get("profile_image_url_https"),
+    #         "profile_image_url": item.get("profile_image_url"),
+    #         "pinned_tweet_ids": item.get("pinned_tweet_ids"),
+    #         "name": item.get("name"),
+    #     }
+    #     extracted_data.append(extracted_item)  # Add the extracted item to the list
 
     # # Save the extracted data to a JSON file
     # with open('extracted_data.json', 'w') as json_file:  # Open a JSON file for writing
     #     json.dump(extracted_data, json_file, indent=4)  # Write the data to the file with indentation
 
-    # Extract the top 5 items with the highest followers_count
-    top_items = sorted(all_items, key=lambda x: x.get("followers_count", 0), reverse=True)[:10]  # Sort and slice the top 5
+    # Sort to the highest followers_count
+    top_items = sorted(all_items, key=lambda x: x.get("followers_count", 0), reverse=True)  # Sort
+    print(f"Number of items after sorting: {len(top_items)}")  # Add this line to see array size
+
 
     # New code to filter the data for the frontend
     frontend_data = []  # Initialize an empty list for frontend data
-    for item in extracted_data:  # Iterate through the top extracted data
+    for item in top_items:  # Iterate through the top extracted data
         frontend_item = {
             "profile_image_url_https": item["profile_image_url_https"],
             "name": item["name"],
-            "followers_count": item["Followers_count"],
+            "followers_count": item["followers_count"],
             "screen_name": item["screen_name"],
-            "location": item["Location"],
-            "description": item["Description"],
+            "location": item["location"],
+            "description": item["description"],
         }
         frontend_data.append(frontend_item)  # Add the filtered item to the frontend data list
 
@@ -159,14 +163,16 @@ with open('frontend_data.json', 'r') as json_file:
 
 # Get list of followers limited to 25 > not sure if this is technically possible!
 @app.route('/api/followers', methods=['GET'])
-
-def get_followers():
+def get_followers_preview():
     twitter_handle = request.args.get('handle')
+  
     if not twitter_handle:
+        print("no twitter handle here")
         return jsonify({"error": "Twitter handle is required"}), 400
 
     previewRun = True;
     limitOn = True; # shouldn't matter when setting preview run
+
 
     try:
         result = fetch_followers_list(twitter_handle, previewRun, limitOn)
@@ -175,15 +181,15 @@ def get_followers():
         app.logger.error(f"Error fetching followers: {e}")
         return jsonify({"error": "An unexpected error occurred. Please try again later."}), 500
 
-# Get full list of followers
-# limiting to 26 for now to test if this limit actually works
+# Get full list of followers - 
 @app.route('/api/followersFull', methods=['GET'])
-def get_followers(, True, False):
+def get_followers_full():
     twitter_handle = request.args.get('handle')
     if not twitter_handle:
         return jsonify({"error": "Twitter handle is required"}), 400
 
     previewRun = False;
+    # limiting to 26 for now to test if this limit actually works
     limitOn = True; # Prevent High Costs, keep this on as long as we're testing!
 
     try:
