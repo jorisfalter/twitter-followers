@@ -16,14 +16,19 @@ app = Flask(__name__, static_folder='frontend/build')
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
 # Mock function to fetch follower count from an API
-def fetch_followers_from_api(twitter_handle):
+def fetch_followers_from_api(twitter_handle, mock_result):
     run_input = {"usernames": [twitter_handle]}
-    run = client.actor("nD89ddq3SgUPchsIO").call(run_input=run_input)
+    if not mock_result:
+        run = client.actor("nD89ddq3SgUPchsIO").call(run_input=run_input)
 
-    # Fetch results from the dataset
-    result_data = {}
-    for item in client.dataset(run["defaultDatasetId"]).iterate_items():
-        result_data = item
+        # Fetch results from the dataset
+        result_data = {}
+        for item in client.dataset(run["defaultDatasetId"]).iterate_items():
+            result_data = item
+
+    elif mock_result:
+        result_data = {"sub_count":"333"}
+
     return {
         "handle": twitter_handle,
         "sub_count": result_data.get("sub_count", 0)  # Safely access sub_count
@@ -37,7 +42,7 @@ def fetch_nr_of_followers():
         return jsonify({"error": "Twitter handle is required"}), 400
 
     try:
-        result = fetch_followers_from_api(twitter_handle)
+        result = fetch_followers_from_api(twitter_handle, True)
         return jsonify(result)
     except Exception as e:
         app.logger.error(f"Error fetching followers: {e}")
