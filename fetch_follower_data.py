@@ -1,3 +1,6 @@
+# use this to fetch a limited amount
+# probably archive
+
 from apify_client import ApifyClient
 import os  # Import the os module to access environment variables
 from dotenv import load_dotenv  # Import load_dotenv to load environment variables from .env file
@@ -12,7 +15,7 @@ client = ApifyClient(os.getenv("APIFY_API_TOKEN"))  # Use the environment variab
 run_input = {
     "user_names": ["jorisfalter"],
     # "user_ids": [1846987139428635000],
-    "maxFollowers": 400,
+    "maxFollowers": 26,
     # "maxFollowings": 100,
     "getFollowers": True,
     "getFollowing": False,

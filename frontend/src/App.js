@@ -40,7 +40,7 @@ function App() {
         }
         setFollowerCount(followerData.sub_count);
 
-        // Fetch the followers list
+        // Fetch a preview version of the followers list
         return fetch("http://127.0.0.1:5000/api/followers");
       })
       .then((response) => {
