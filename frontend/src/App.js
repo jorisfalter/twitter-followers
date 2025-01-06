@@ -10,6 +10,9 @@ function App() {
   const [error, setError] = useState(""); // State for errors
   const [isSubmitted, setIsSubmitted] = useState(false); // State to track form submission
   const [showPopup, setShowPopup] = useState(false); // State for controlling popup visibility
+  const [email, setEmail] = useState(""); // State for the user's email
+  const [showEmailPopup, setShowEmailPopup] = useState(false); // State for controlling email popup visibility
+  const [paymentSucceeded, setPaymentSucceeded] = useState(false); // State for payment success message
 
   // Fetch follower count and follower list
   const fetchData = () => {
@@ -95,7 +98,19 @@ function App() {
   };
 
   const handlePopupClose = () => {
-    setShowPopup(false); // Function to close the popup
+    setShowPopup(false); // Function to close the main popup
+  };
+
+  const handlePayNowClick = () => {
+    setShowEmailPopup(true); // Show email popup when "Go To Payment" is clicked
+  };
+
+  const handleEmailSubmit = (e) => {
+    e.preventDefault(); // Prevent default form submission
+    console.log("Email submitted:", email);
+    setShowEmailPopup(false); // Close email popup after submission
+    setEmail(""); // Reset email input
+    setPaymentSucceeded(true); // Set payment succeeded state to true
   };
 
   const calculatePrice = (count) => {
@@ -266,7 +281,14 @@ function App() {
           <p>
             The Price Is <strong>${calculatePrice(followerCount)}</strong>
           </p>
-          <button onClick={handlePopupClose}>Pay Now</button>
+          <button
+            onClick={() => {
+              handlePopupClose();
+              handlePayNowClick();
+            }}
+          >
+            Go to payment
+          </button>
         </div>
       )}
       {/* Overlay */}
@@ -282,6 +304,78 @@ function App() {
             zIndex: 999,
           }}
         />
+      )}
+
+      {/* Email Popup Component */}
+      {showEmailPopup && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            padding: "20px",
+            boxShadow: "0 0 10px rgba(0,0,0,0.5)",
+            zIndex: 1000,
+          }}
+        >
+          <h2>Payment Details</h2>
+          <p>
+            The Price Is <strong>${calculatePrice(followerCount)}</strong>
+          </p>
+          <form onSubmit={handleEmailSubmit}>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+              style={{
+                padding: "10px",
+                width: "300px",
+                fontSize: "16px",
+                border: "1px solid #ddd",
+                borderRadius: "5px",
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                padding: "10px 20px",
+                marginLeft: "10px",
+                fontSize: "16px",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Pay Now
+            </button>
+          </form>
+          <button onClick={() => setShowEmailPopup(false)}>Cancel</button>
+        </div>
+      )}
+
+      {/* Popup for payment success */}
+      {paymentSucceeded && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            padding: "20px",
+            boxShadow: "0 0 10px rgba(0,0,0,0.5)",
+            zIndex: 1000,
+          }}
+        >
+          <h2>Payment Succeeded</h2>
+          <p>Fetching all followers (this might take a while)...</p>
+        </div>
       )}
     </div>
   );
