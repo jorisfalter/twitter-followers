@@ -17,21 +17,37 @@ CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
 # Function to fetch follower count from an API - currently mock
 def fetch_followers_amount(twitter_handle, mock_result):
+    
+    ## Old API
     run_input = {"usernames": [twitter_handle]}
-    if not mock_result:
-        run = client.actor("nD89ddq3SgUPchsIO").call(run_input=run_input)
+    # if not mock_result:
+    #     run = client.actor("nD89ddq3SgUPchsIO").call(run_input=run_input)
 
-        # Fetch results from the dataset
-        result_data = {}
-        for item in client.dataset(run["defaultDatasetId"]).iterate_items():
-            result_data = item
+    #     # Fetch results from the dataset
+    #     result_data = {}
+    #     for item in client.dataset(run["defaultDatasetId"]).iterate_items():
+    #         result_data = item
 
-    elif mock_result:
-        result_data = {"sub_count":"333"}
+    # elif mock_result:
+    #     result_data = {"sub_count":"333"}
+
+    # new API
+
+    # Prepare the Actor input
+    run_input = {
+    "user_names": [twitter_handle],
+    }
+    # Run the Actor and wait for it to finish
+    run = client.actor("tLs1g71YVTPoXAPnb").call(run_input=run_input)
+
+    # Get only the first item from the dataset
+    result_data = next(client.dataset(run["defaultDatasetId"]).iterate_items(), None)
+    if result_data is None:
+        result_data = {}  # Fallback if no items are found
 
     return {
         "handle": twitter_handle,
-        "sub_count": result_data.get("sub_count", 0)  # Safely access sub_count
+        "sub_count": result_data.get("relationship_counts", {}).get("followers", 0)
     }
 
 def fetch_followers_list(twitter_handle, preview_run, limitOn):
@@ -39,7 +55,7 @@ def fetch_followers_list(twitter_handle, preview_run, limitOn):
     if limitOn is True:
         maxFollowers = 200;
     elif limitOn is False:
-        maxFollowers = 200; # change this when in production!
+        maxFollowers = 300; # change this when in production!
 
     if preview_run is True:
         maxFollowers = 200;

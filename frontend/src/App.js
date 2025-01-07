@@ -147,7 +147,7 @@ function App() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>Find Your X Followers with Large Followings</h1>
+      <h1>Find Your X Followers with Influence</h1>
       <form style={{ marginTop: "20px" }}>
         <input
           type="text"
