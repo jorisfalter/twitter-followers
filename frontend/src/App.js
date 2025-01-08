@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./App.css";
 
 // this is the react frontend
 
@@ -146,26 +147,21 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>Find Your X Followers with Influence</h1>
-      <form style={{ marginTop: "20px" }}>
+    <div style={styles.container}>
+      <h1 style={styles.title}>Find Your X Followers with Influence</h1>
+      <form style={styles.form}>
         <input
+          style={styles.input}
           type="text"
           value={twitterHandle}
           onChange={(e) => setTwitterHandle(e.target.value)}
-          placeholder="Enter X Handle"
+          placeholder="Enter X Handle (without @)"
           disabled={isSubmitted} // Keep input disabled after submission
-          style={{
-            padding: "10px",
-            width: "300px",
-            fontSize: "16px",
-            border: "1px solid #ddd",
-            borderRadius: "5px",
-          }}
         />
         <button
           type="button" // Always set as "button" to avoid default form submission behavior
           disabled={loading} // Disable button while loading
+          className={isSubmitted ? "resetButton" : "searchButton"}
           onClick={() => {
             if (isSubmitted) {
               // Reset logic when the form is already submitted
@@ -179,80 +175,74 @@ function App() {
               fetchData(); // Fetch the data directly
             }
           }}
-          style={{
-            padding: "10px 20px",
-            marginLeft: "10px",
-            fontSize: "16px",
-            backgroundColor: isSubmitted ? "#007bff" : "#007bff",
-            color: "#fff",
-            border: "none",
-            borderRadius: "5px",
-            cursor: loading ? "not-allowed" : "pointer", // Change cursor based on loading
-          }}
+          style={isSubmitted ? styles.resetButton : styles.searchButton}
         >
           {isSubmitted ? "Reset" : "Search"}
         </button>
       </form>
 
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {loading && <p style={styles.loading}>Loading...</p>}
+      {error && <p style={styles.error}>{error}</p>}
       {followerCount !== null && (
         <div>
-          <p>
+          <p style={styles.result}>
             The Twitter handle <strong>@{twitterHandle}</strong> has{" "}
             <strong>{followerCount.toLocaleString()}</strong> followers.
           </p>
           {data.length > 0 && (
             <div>
-              <h2>Here Are Your Last 25 Followers</h2>
-              <h3>Highest Number of Followers First</h3>
-              <button
-                type="button"
-                onClick={() => setShowPopup(true)} // Show popup on button click
+              <h2 style={styles.subtitle}>Here Are The Last 200 Followers</h2>
+              <h3 style={styles.subsubtitle}>
+                Highest Number of Followers First
+              </h3>
+              <div
                 style={{
-                  padding: "10px 20px",
-                  marginLeft: "10px",
-                  fontSize: "16px",
-                  backgroundColor: "#007bff",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBottom: "20px",
                 }}
               >
-                Fetch Your Full List of Followers
-              </button>
-              <table
-                style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  marginTop: "20px",
-                }}
-              >
+                <button
+                  className={"fetchMoreButton"}
+                  type="button"
+                  onClick={() => setShowPopup(true)}
+                  style={styles.fetchMoreButton}
+                >
+                  Fetch Your Full List of Followers
+                </button>
+              </div>
+              <table style={styles.table}>
                 <thead>
                   <tr>
-                    <th style={styles.header}>Profile Image</th>
-                    <th style={styles.header}>Name</th>
-                    <th style={styles.header}>Followers</th>
-                    <th style={styles.header}>Description</th>
-                    <th style={styles.header}>Location</th>
+                    <th style={styles.tableHeader}>#</th>
+                    <th style={styles.tableHeader}></th>
+                    <th style={styles.tableHeader}>Handle</th>
+                    <th style={styles.tableHeader}>Followers</th>
+                    <th style={styles.tableHeader}>Description</th>
+                    <th style={styles.tableHeader}>Location</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.map((follower, index) => (
-                    <tr key={index} style={styles.row}>
-                      <td style={styles.cell}>
+                    <tr
+                      key={index}
+                      style={styles.tableRow}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style = styles.tableRowHover)
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style = styles.tableRow)
+                      }
+                    >
+                      <td style={styles.tableCell}>{index + 1}</td>
+                      <td style={styles.tableCell}>
                         <img
                           src={follower.profile_image_url_https}
                           alt={follower.name}
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            borderRadius: "50%",
-                          }}
+                          style={styles.profileImage}
                         />
                       </td>
-                      <td style={styles.cell}>
+                      <td style={styles.tableCell}>
                         <a
                           href={`https://twitter.com/${follower.screen_name}`}
                           target="_blank"
@@ -262,13 +252,15 @@ function App() {
                           {follower.name}
                         </a>
                       </td>
-                      <td style={styles.cell}>
+                      <td style={styles.tableCell}>
                         {formatFollowers(follower.followers_count)}
                       </td>
-                      <td style={styles.cell}>
+                      <td style={styles.tableCell}>
                         {follower.description || "N/A"}
                       </td>
-                      <td style={styles.cell}>{follower.location || "N/A"}</td>
+                      <td style={styles.tableCell}>
+                        {follower.location || "N/A"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -402,19 +394,90 @@ function App() {
 }
 
 const styles = {
-  header: {
-    background: "#f4f4f4",
+  container: {
+    padding: "20px",
+    fontFamily: "'Poppins', sans-serif",
+    backgroundColor: "#f0f8ff",
+    color: "#333",
+    minHeight: "100vh",
+  },
+  title: {
+    fontSize: "36px",
+    fontWeight: "bold",
+    color: "#ff6347",
+    textAlign: "center",
+    marginBottom: "20px",
+  },
+  form: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "10px",
+    marginBottom: "20px",
+  },
+  input: {
+    padding: "10px",
+    width: "300px",
+    fontSize: "16px",
+    border: "2px solid #ff6347",
+    borderRadius: "5px",
+  },
+
+  loading: { fontSize: "18px", textAlign: "center", color: "#ffa500" },
+  error: { fontSize: "16px", color: "red", textAlign: "center" },
+  result: {
+    fontSize: "18px",
+    textAlign: "center",
+    marginBottom: "20px",
+    color: "#4b0082",
+  },
+  subtitle: {
+    fontSize: "24px",
+    textAlign: "center",
+    marginBottom: "20px",
+    color: "#ff4500",
+  },
+  subsubtitle: { textAlign: "center" },
+
+  table: {
+    width: "100%",
+    borderCollapse: "separate",
+    borderSpacing: "0",
+    marginTop: "20px",
+    backgroundColor: "#fff",
+    borderRadius: "10px",
+    overflow: "hidden",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    transition: "transform 0.2s ease",
+    overflowX: "auto", // Allow horizontal scrolling
+  },
+  tableRow: {
+    borderBottom: "1px solid #ddd",
+    transition: "background-color 0.3s ease",
+    cursor: "pointer",
+  },
+  tableRowHover: {
+    backgroundColor: "#f9f9f9",
+  },
+
+  tableCell: {
     padding: "10px",
     textAlign: "left",
-    borderBottom: "1px solid #ddd",
+    fontSize: "16px",
   },
-  row: {
-    borderBottom: "1px solid #ddd",
-  },
-  cell: {
-    padding: "10px",
+  tableHeader: {
+    // background: "linear-gradient(90deg, #ffa07a, #ff6347)",
+    color: "#ffa07a", // White text for better contrast
+    padding: "12px 15px", // Adjust spacing
     textAlign: "left",
+    fontWeight: "600", // Semi-bold for better readability
+    borderBottom: "2px solid #ddd", // Slight border for separation
+    // boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)", // Subtle shadow
+    textTransform: "uppercase", // Make headers all-caps for emphasis
+    fontSize: "14px", // Standardize font size
   },
+
+  profileImage: { width: "50px", height: "50px", borderRadius: "50%" },
 };
 
 export default App;

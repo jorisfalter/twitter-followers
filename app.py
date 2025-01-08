@@ -56,7 +56,7 @@ def fetch_followers_list(twitter_handle, preview_run, limitOn):
         maxFollowers = 200;
         print("limit is on")
     elif limitOn is False:
-        maxFollowers = 300; # change this when in production!
+        maxFollowers = 1000; # change this when in production!
         print("limit is off")
 
 
