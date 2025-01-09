@@ -13,7 +13,7 @@ client = ApifyClient(os.getenv("APIFY_API_TOKEN"))
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='frontend/build')
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
 
