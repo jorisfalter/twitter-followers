@@ -25,4 +25,4 @@ builder = "paketobuildpacks/builder:base"
 buildpacks = ["gcr.io/paketo-buildpacks/python"]
 
 [processes]
-  web = "python3 app.py"
+  app = "python app.py"
