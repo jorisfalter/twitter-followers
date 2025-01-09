@@ -1,3 +1,5 @@
 *.csv
 .env
-*.json
+temp.json
+top_extracted_data.json
+frontend_data.json
