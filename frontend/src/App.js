@@ -208,7 +208,7 @@ function App() {
                   onClick={() => setShowPopup(true)}
                   style={styles.fetchMoreButton}
                 >
-                  Fetch Your Full List of Followers
+                  Fetch All Followers
                 </button>
               </div>
               <table style={styles.table}>
@@ -282,29 +282,56 @@ function App() {
             padding: "20px",
             boxShadow: "0 0 10px rgba(0,0,0,0.5)",
             zIndex: 1000,
+            borderRadius: "10px",
           }}
         >
-          <h2>See All Your {followerCount.toLocaleString()} Followers</h2>
+          {" "}
+          <button
+            onClick={() => setShowPopup(false)}
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "10px",
+              background: "none",
+              border: "none",
+              fontSize: "20px",
+              cursor: "pointer",
+              padding: "5px",
+            }}
+          >
+            ×
+          </button>
+          <h2>
+            See All Your {followerCount.toLocaleString()} Followers for{" "}
+            <strong>${calculatePrice(followerCount)}</strong>
+          </h2>
+          <p>Our pricing is variable. </p>
           <p>
-            The price is variable depending on the amount of followers. The more
-            followers, the more expensive for us it is to fetch them (the price
-            of popularity ...)
-          </p>
-          <p>
-            The Price Is <strong>${calculatePrice(followerCount)}</strong>
+            The more followers, the more expensive for us it is to fetch them
+            (the price of popularity ...)
           </p>
           <button
             onClick={() => {
               handlePopupClose();
               handlePayNowClick();
             }}
+            style={{
+              padding: "10px 20px",
+              marginLeft: "10px",
+              fontSize: "16px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
           >
             Go to payment
           </button>
         </div>
       )}
-      {/* Overlay */}
-      {showPopup && (
+      {/* Overlay  WHAT IS THIS */}
+      {/* {showPopup && (
         <div
           style={{
             position: "fixed",
@@ -314,9 +341,10 @@ function App() {
             height: "100%",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 999,
+            borderRadius: "10px",
           }}
         />
-      )}
+      )} */}
 
       {/* Email Popup Component */}
       {showEmailPopup && (
@@ -330,12 +358,29 @@ function App() {
             padding: "20px",
             boxShadow: "0 0 10px rgba(0,0,0,0.5)",
             zIndex: 1000,
+            borderRadius: "10px",
           }}
         >
-          <h2>Payment Details</h2>
-          <p>
-            The Price Is <strong>${calculatePrice(followerCount)}</strong>
-          </p>
+          {" "}
+          <button
+            onClick={() => setShowEmailPopup(false)}
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "10px",
+              background: "none",
+              border: "none",
+              fontSize: "20px",
+              cursor: "pointer",
+              padding: "5px",
+            }}
+          >
+            ×
+          </button>
+          <h2>Enter Email First</h2>
+          <h4 style={{ fontWeight: "normal" }}>
+            (so you can always access the full list ... )
+          </h4>
           <form onSubmit={handleEmailSubmit}>
             <input
               type="email"
@@ -364,10 +409,9 @@ function App() {
                 cursor: "pointer",
               }}
             >
-              Pay Now
+              Pay ${calculatePrice(followerCount)}
             </button>
           </form>
-          <button onClick={() => setShowEmailPopup(false)}>Cancel</button>
         </div>
       )}
 
@@ -383,6 +427,7 @@ function App() {
             padding: "20px",
             boxShadow: "0 0 10px rgba(0,0,0,0.5)",
             zIndex: 1000,
+            borderRadius: "10px",
           }}
         >
           <h2>Payment Succeeded</h2>
