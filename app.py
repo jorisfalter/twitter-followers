@@ -15,14 +15,7 @@ client = ApifyClient(os.getenv("APIFY_API_TOKEN"))
 app = Flask(__name__, static_folder='frontend/build')
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
-# Serve React frontend
-@app.route("/", defaults={"path": ""})
-@app.route("/<path:path>")
-def serve(path):
-    if path != "" and os.path.exists(app.static_folder + "/" + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, "index.html")
+
 
 # Function to fetch follower count from an API - currently mock
 def fetch_followers_amount(twitter_handle, mock_result):
