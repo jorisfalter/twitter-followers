@@ -178,9 +178,9 @@ def fetch_nr_of_followers():
         app.logger.error(f"Error fetching followers: {e}")
         return jsonify({"error": "An unexpected error occurred. Please try again later."}), 500
 
-# API endpoint to fetch preloaded follower data
-with open('frontend_data.json', 'r') as json_file:
-    frontend_data = json.load(json_file)
+# # API endpoint to fetch preloaded follower data
+# with open('frontend_data.json', 'r') as json_file:
+#     frontend_data = json.load(json_file)
 
 # Get list of followers limited to 25 > not sure if this is technically possible!
 @app.route('/api/followers', methods=['GET'])
