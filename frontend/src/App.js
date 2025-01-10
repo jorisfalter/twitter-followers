@@ -14,7 +14,10 @@ function App() {
   const [email, setEmail] = useState(""); // State for the user's email
   const [showEmailPopup, setShowEmailPopup] = useState(false); // State for controlling email popup visibility
   const [paymentSucceeded, setPaymentSucceeded] = useState(false); // State for payment success message
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl =
+    process.env.NODE_ENV === "development"
+      ? "http://127.0.0.1:5000"
+      : process.env.REACT_APP_BACKEND_URL;
 
   // Fetch follower count and follower list
   const fetchData = () => {
@@ -29,6 +32,7 @@ function App() {
     setData([]); // Clear previous data
 
     // Fetch the follower count
+    console.log(`${backendUrl}/api/fetch_followers?handle=${twitterHandle}`);
     fetch(`${backendUrl}/api/fetch_followers?handle=${twitterHandle}`)
       .then((response) => {
         if (!response.ok) {
