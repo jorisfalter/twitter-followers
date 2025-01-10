@@ -14,6 +14,7 @@ function App() {
   const [email, setEmail] = useState(""); // State for the user's email
   const [showEmailPopup, setShowEmailPopup] = useState(false); // State for controlling email popup visibility
   const [paymentSucceeded, setPaymentSucceeded] = useState(false); // State for payment success message
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   // Fetch follower count and follower list
   const fetchData = () => {
@@ -28,7 +29,7 @@ function App() {
     setData([]); // Clear previous data
 
     // Fetch the follower count
-    fetch(`http://127.0.0.1:5000/api/fetch_followers?handle=${twitterHandle}`)
+    fetch(`${backendUrl}/api/fetch_followers?handle=${twitterHandle}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Error: ${response.status} - ${response.statusText}`);
@@ -41,10 +42,10 @@ function App() {
         }
         setFollowerCount(followerData.sub_count);
 
+        fetch(`${backendUrl}/api/fetch_followers?handle=${twitterHandle}`);
+
         // Fetch a preview version of the followers list
-        return fetch(
-          `http://127.0.0.1:5000/api/followers?handle=${twitterHandle}`
-        );
+        return fetch(`${backendUrl}/api/followers?handle=${twitterHandle}`);
       })
       .then((response) => {
         if (!response.ok) {
@@ -115,9 +116,7 @@ function App() {
     setEmail(""); // Reset email input
     setPaymentSucceeded(true); // Set payment succeeded state to true
     // Fetch the full list after payment
-    fetch(
-      `http://127.0.0.1:5000/api/followersFull?handle=${twitterHandle}&full=true`
-    )
+    fetch(`${backendUrl}/api/followersFull?handle=${twitterHandle}&full=true`)
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Error: ${response.status} - ${response.statusText}`);
