@@ -386,7 +386,7 @@ function App() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              required
+              // required
               style={{
                 padding: "10px",
                 width: "300px",
