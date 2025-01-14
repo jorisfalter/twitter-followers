@@ -145,8 +145,20 @@ def fetch_followers_list(twitter_handle, preview_run, limitOn):
 
 
     # New code to filter the data for the frontend
-    frontend_data = []  # Initialize an empty list for frontend data
-    for item in top_items:  # Iterate through the top extracted data
+    frontend_data = []
+    for item in top_items:
+        # Get the full status time
+        full_status_time = item.get("status", {}).get("created_at")
+        # Format the date if it exists, otherwise keep it as None
+        formatted_date = None
+        if full_status_time:
+            try:
+                # Split the string and take only the date part (Twitter dates typically come as "Dow MMM DD HH:MM:SS +0000 YYYY")
+                date_parts = full_status_time.split()
+                formatted_date = f"{date_parts[1]} {date_parts[2]} {date_parts[5]}"  # Month Day Year
+            except:
+                formatted_date = full_status_time  # Fallback to original if parsing fails
+
         frontend_item = {
             "profile_image_url_https": item["profile_image_url_https"],
             "name": item["name"],
@@ -154,10 +166,10 @@ def fetch_followers_list(twitter_handle, preview_run, limitOn):
             "screen_name": item["screen_name"],
             "location": item["location"],
             "description": item["description"],
-            "statusTime": item.get("status", {}).get("created_at"),
+            "statusTime": formatted_date,
             "statusText": item.get("status", {}).get("text")
         }
-        frontend_data.append(frontend_item)  # Add the filtered item to the frontend data list
+        frontend_data.append(frontend_item)
 
     return(frontend_data)
 

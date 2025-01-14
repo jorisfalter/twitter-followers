@@ -223,8 +223,8 @@ function App() {
                     <th style={styles.tableHeader}>Followers</th>
                     <th style={styles.tableHeader}>Description</th>
                     <th style={styles.tableHeader}>Location</th>
-                    <th style={styles.tableHeader}>StatusDate</th>
-                    <th style={styles.tableHeader}>StatusText</th>
+                    <th style={styles.tableHeader}>Last Tweet Date</th>
+                    <th style={styles.tableHeader}>Last Tweet Content</th>
                   </tr>
                 </thead>
                 <tbody>
