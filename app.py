@@ -154,6 +154,8 @@ def fetch_followers_list(twitter_handle, preview_run, limitOn):
             "screen_name": item["screen_name"],
             "location": item["location"],
             "description": item["description"],
+            "statusTime": item.get("status", {}).get("created_at"),
+            "statusText": item.get("status", {}).get("text")
         }
         frontend_data.append(frontend_item)  # Add the filtered item to the frontend data list
 

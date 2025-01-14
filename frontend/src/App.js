@@ -211,7 +211,7 @@ function App() {
                   onClick={() => setShowPopup(true)}
                   style={styles.fetchMoreButton}
                 >
-                  Fetch All Followers
+                  Want to see all your followers?
                 </button>
               </div>
               <table style={styles.table}>
@@ -223,6 +223,8 @@ function App() {
                     <th style={styles.tableHeader}>Followers</th>
                     <th style={styles.tableHeader}>Description</th>
                     <th style={styles.tableHeader}>Location</th>
+                    <th style={styles.tableHeader}>StatusDate</th>
+                    <th style={styles.tableHeader}>StatusText</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -263,6 +265,12 @@ function App() {
                       </td>
                       <td style={styles.tableCell}>
                         {follower.location || "N/A"}
+                      </td>
+                      <td style={styles.tableCell}>
+                        {follower.statusTime || "N/A"}
+                      </td>
+                      <td style={styles.tableCell}>
+                        {follower.statusText || "N/A"}
                       </td>
                     </tr>
                   ))}
@@ -305,13 +313,13 @@ function App() {
             ×
           </button>
           <h2>
-            See All Your {followerCount.toLocaleString()} Followers for{" "}
-            <strong>${calculatePrice(followerCount)}</strong>
+            It's only <strong>${calculatePrice(followerCount)}</strong> to see
+            the full list of {followerCount.toLocaleString()} Followers{" "}
           </h2>
           <p>Our pricing is variable. </p>
           <p>
             The more followers, the more expensive for us it is to fetch them
-            (the price of popularity ...)
+            <i>(the price of popularity ...)</i>
           </p>
           <button
             onClick={() => {
