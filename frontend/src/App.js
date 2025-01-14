@@ -151,7 +151,9 @@ function App() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Find Your X Followers with Influence</h1>
+      <h1 style={styles.title}>
+        Build Relationship with Your X Followers with Influence
+      </h1>
       <form style={styles.form}>
         <input
           style={styles.input}
