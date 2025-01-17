@@ -83,27 +83,43 @@ function App() {
     return count + " Followers";
   };
 
-  const makeLinksClickable = (text) => {
-    // Convert URLs into clickable links
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const twitterHandleRegex = /@(\w+)/g;
+  // const makeLinksClickable = (text) => {
+  //   // Convert URLs into clickable links
+  //   const urlRegex = /(https?:\/\/[^\s]+)/g;
+  //   const twitterHandleRegex = /@(\w+)/g;
+  //   const githubRepoRegex = /([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)/g; // Match potential GitHub repo patterns
 
-    const linkedText = text
-      ?.replace(
-        urlRegex,
-        (url) =>
-          `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
-      )
-      ?.replace(
-        twitterHandleRegex,
-        (handle) =>
-          `<a href="https://twitter.com/${handle.slice(
-            1
-          )}" target="_blank" rel="noopener noreferrer">${handle}</a>`
-      );
+  //   const linkedText = text
+  //     ?.replace(urlRegex, (url) => {
+  //       // Special handling for t.co links - you might want to expand these
+  //       if (url.includes("t.co")) {
+  //         return `<a href="${url}" target="_blank" rel="noopener noreferrer" title="Note: This is a shortened URL">🔗 ${url}</a>`;
+  //       }
+  //       // Special handling for GitHub links
+  //       if (url.includes("github.com")) {
+  //         return `<a href="${url}" target="_blank" rel="noopener noreferrer">📦 GitHub Repo</a>`;
+  //       }
+  //       // Special handling for PyPI links
+  //       if (url.includes("pypi.org")) {
+  //         return `<a href="${url}" target="_blank" rel="noopener noreferrer">📦 PyPI Package</a>`;
+  //       }
+  //       return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+  //     })
+  //     ?.replace(
+  //       twitterHandleRegex,
+  //       (handle) =>
+  //         `<a href="https://x.com/${handle.slice(
+  //           1
+  //         )}" target="_blank" rel="noopener noreferrer">👤 ${handle}</a>`
+  //     )
+  //     // Look for potential package names
+  //     ?.replace(
+  //       /\b(yfinance)\b/gi, // Add more package names as needed
+  //       (pkg) => `<span title="Popular Python package">📊 ${pkg}</span>`
+  //     );
 
-    return { __html: linkedText };
-  };
+  //   return { __html: linkedText };
+  // };
 
   const handlePopupClose = () => {
     setShowPopup(false); // Function to close the main popup
@@ -152,7 +168,8 @@ function App() {
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>
-        Build Relationships with Your X Followers with Influence
+        Build Better Relationships with Your{" "}
+        <i class="fa-brands fa-x-twitter"></i> Followers
       </h1>
       <form style={styles.form}>
         <input
@@ -186,7 +203,9 @@ function App() {
         </button>
       </form>
 
-      {loading && <p style={styles.loading}>Loading...</p>}
+      {loading && followerCount == null && (
+        <p style={styles.loading}>Loading...</p>
+      )}
       {error && <p style={styles.error}>{error}</p>}
       {followerCount !== null && (
         <div>
@@ -194,9 +213,10 @@ function App() {
             The Twitter handle <strong>@{twitterHandle}</strong> has{" "}
             <strong>{followerCount.toLocaleString()}</strong> followers.
           </p>
+          {loading && <p style={styles.loading}>Loading Followers...</p>}
           {data.length > 0 && (
             <div>
-              <h2 style={styles.subtitle}>Here Are The Last 200 Followers</h2>
+              <h2 style={styles.subtitle}>Here Are The Last 200 Followers:</h2>
               <h3 style={styles.subsubtitle}>
                 Highest Number of Followers First
               </h3>
@@ -223,10 +243,11 @@ function App() {
                     <th style={styles.tableHeader}></th>
                     <th style={styles.tableHeader}>Handle</th>
                     <th style={styles.tableHeader}>Followers</th>
-                    <th style={styles.tableHeader}>Description</th>
+
                     <th style={styles.tableHeader}>Location</th>
-                    <th style={styles.tableHeader}>Last Tweet Date</th>
-                    <th style={styles.tableHeader}>Last Tweet Content</th>
+                    <th style={styles.tableHeader}>Last Post Or Reply</th>
+                    <th style={styles.tableHeader}>Description</th>
+                    {/* <th style={styles.tableHeader}>Last Tweet Content</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -251,7 +272,7 @@ function App() {
                       </td>
                       <td style={styles.tableCell}>
                         <a
-                          href={`https://twitter.com/${follower.screen_name}`}
+                          href={`https://x.com/${follower.screen_name}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{ textDecoration: "none", color: "blue" }}
@@ -262,18 +283,19 @@ function App() {
                       <td style={styles.tableCell}>
                         {formatFollowers(follower.followers_count)}
                       </td>
-                      <td style={styles.tableCell}>
-                        {follower.description || "N/A"}
-                      </td>
+
                       <td style={styles.tableCell}>
                         {follower.location || "N/A"}
                       </td>
                       <td style={styles.tableCell}>
                         {follower.statusTime || "N/A"}
                       </td>
-                      <td style={styles.tableCell}>
-                        {follower.statusText || "N/A"}
+                      <td style={styles.descriptionCell}>
+                        {follower.description || "N/A"}
                       </td>
+                      {/* <td style={styles.tableCell}>
+                        {follower.statusText || "N/A"}
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
@@ -453,7 +475,7 @@ function App() {
 
 const styles = {
   container: {
-    padding: "20px",
+    padding: "100px",
     fontFamily: "'Poppins', sans-serif",
     backgroundColor: "#f0f8ff",
     color: "#333",
@@ -522,6 +544,12 @@ const styles = {
     padding: "10px",
     textAlign: "left",
     fontSize: "16px",
+  },
+  descriptionCell: {
+    padding: "10px",
+    textAlign: "left",
+    fontSize: "14px", // Smaller font size for descriptions
+    color: "#666", // Slightly muted color for better readability
   },
   tableHeader: {
     // background: "linear-gradient(90deg, #ffa07a, #ff6347)",
