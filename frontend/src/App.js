@@ -13,7 +13,8 @@ function App() {
   const [showPopup, setShowPopup] = useState(false); // State for controlling popup visibility
   const [email, setEmail] = useState(""); // State for the user's email
   const [showEmailPopup, setShowEmailPopup] = useState(false); // State for controlling email popup visibility
-  const [paymentSucceeded, setPaymentSucceeded] = useState(false); // State for payment success message
+  const [paymentSucceeded, setPaymentSucceeded] = useState(false); // State for payment success message > this one is the popup
+  const [customerPaidState, setCustomerPaidState] = useState(false); // This is the state after the user has paid
   const backendUrl =
     process.env.NODE_ENV === "development"
       ? "http://127.0.0.1:5000"
@@ -146,6 +147,7 @@ function App() {
       .then((followersList) => {
         setData(followersList);
         setPaymentSucceeded(false); // Hide the payment success message once data is loaded
+        setCustomerPaidState(true); // Set the customer paid state to true
       })
       .catch((err) => {
         setError(err.message);
@@ -216,26 +218,36 @@ function App() {
           {loading && <p style={styles.loading}>Loading Followers...</p>}
           {data.length > 0 && (
             <div>
-              <h2 style={styles.subtitle}>Here Are The Last 200 Followers:</h2>
+              {customerPaidState == false && (
+                <h2 style={styles.subtitle}>
+                  Here Are The Last 200 Followers:
+                </h2>
+              )}
+              {customerPaidState && (
+                <h2 style={styles.subtitle}>Here Are All Your Followers:</h2>
+              )}
+
               <h3 style={styles.subsubtitle}>
                 (Highest Number of Followers First)
               </h3>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginBottom: "20px",
-                }}
-              >
-                <button
-                  className={"fetchMoreButton"}
-                  type="button"
-                  onClick={() => setShowPopup(true)}
-                  style={styles.fetchMoreButton}
+              {customerPaidState == false && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "20px",
+                  }}
                 >
-                  Want to see all your followers?
-                </button>
-              </div>
+                  <button
+                    className={"fetchMoreButton"}
+                    type="button"
+                    onClick={() => setShowPopup(true)}
+                    style={styles.fetchMoreButton}
+                  >
+                    Want to see all your followers?
+                  </button>
+                </div>
+              )}
               <table style={styles.table}>
                 <thead>
                   <tr>
