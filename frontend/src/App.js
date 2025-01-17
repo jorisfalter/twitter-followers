@@ -227,7 +227,7 @@ function App() {
                 <h2 style={styles.subtitle}>Here Are All Your Followers:</h2>
               )}
 
-              <h3 style={styles.subsubtitle}>
+              <h3 style={{ ...styles.subsubtitle, fontWeight: "normal" }}>
                 (Highest Number of Followers First)
               </h3>
               {customerPaidState == false && (
@@ -244,76 +244,183 @@ function App() {
                     onClick={() => setShowPopup(true)}
                     style={styles.fetchMoreButton}
                   >
-                    Want to see all your followers?
+                    {/* Icon */}
+                    Want to see all your followers?&nbsp;
+                    <i class="fas fa-users"></i>
                   </button>
                 </div>
               )}
-              <div style={{ overflowX: "auto" }}>
-                <table style={styles.table}>
-                  <thead>
-                    <tr>
-                      <th style={styles.tableHeader}>#</th>
-                      <th style={styles.tableHeader}></th>
-                      <th style={styles.tableHeader}>Handle</th>
-                      <th style={styles.tableHeader}>Followers</th>
-
-                      <th style={styles.tableHeader}>Location</th>
-                      <th style={styles.tableHeader}>Last Post Or Reply</th>
-                      <th style={styles.tableHeader}>Description</th>
-                      {/* <th style={styles.tableHeader}>Last Tweet Content</th> */}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map((follower, index) => (
-                      <tr
-                        key={index}
-                        style={styles.tableRow}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style = styles.tableRowHover)
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style = styles.tableRow)
-                        }
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th
+                      style={{
+                        ...styles.tableHeader,
+                        fontSize: "16px",
+                        color: "#ff4500",
+                      }}
+                    >
+                      #
+                    </th>
+                    <th
+                      style={{
+                        ...styles.tableHeader,
+                        fontSize: "16px",
+                        color: "#ff4500",
+                      }}
+                    ></th>
+                    <th
+                      style={{
+                        ...styles.tableHeader,
+                        fontSize: "16px",
+                        color: "#ff4500",
+                      }}
+                    >
+                      Handle
+                    </th>
+                    <th
+                      style={{
+                        ...styles.tableHeader,
+                        fontSize: "16px",
+                        color: "#ff4500",
+                      }}
+                    >
+                      <i
+                        className="fas fa-user"
+                        style={{ marginRight: "5px" }}
+                      ></i>{" "}
+                      Followers
+                    </th>
+                    <th
+                      style={{
+                        ...styles.tableHeader,
+                        fontSize: "16px",
+                        color: "#ff4500",
+                      }}
+                    >
+                      <i
+                        className="fas fa-map-marker-alt"
+                        style={{ marginRight: "5px" }}
+                      ></i>{" "}
+                      Location
+                    </th>
+                    <th
+                      style={{
+                        ...styles.tableHeader,
+                        fontSize: "16px",
+                        color: "#ff4500",
+                      }}
+                    >
+                      Last Post Or Reply
+                    </th>
+                    <th
+                      style={{
+                        ...styles.tableHeader,
+                        fontSize: "16px",
+                        color: "#ff4500",
+                      }}
+                    >
+                      Description
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((follower, index) => (
+                    <tr
+                      key={index}
+                      style={{
+                        ...styles.tableRow,
+                        backgroundColor:
+                          index % 2 === 0 ? "#ffffff" : "#f9f9f9", // Zebra striping
+                        borderBottom: "1px solid #ddd", // Add a bottom border for depth
+                        boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)", // Add a slight shadow for depth
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style = styles.tableRowHover)
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style = styles.tableRow)
+                      }
+                    >
+                      <td
+                        style={{
+                          ...styles.tableCell,
+                          fontWeight: index < 3 ? "bold" : "normal",
+                        }}
                       >
-                        <td style={styles.tableCell}>{index + 1}</td>
-                        <td style={styles.tableCell}>
-                          <img
-                            src={follower.profile_image_url_https}
-                            alt={follower.name}
-                            style={styles.profileImage}
-                          />
-                        </td>
-                        <td style={styles.tableCell}>
-                          <a
-                            href={`https://x.com/${follower.screen_name}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ textDecoration: "none", color: "blue" }}
-                          >
-                            {follower.name}
-                          </a>
-                        </td>
-                        <td style={styles.tableCell}>
-                          {formatFollowers(follower.followers_count)}
-                        </td>
-
-                        <td style={styles.tableCell}>
-                          {follower.location || "N/A"}
-                        </td>
-                        <td style={styles.tableCell}>
-                          {follower.statusTime || "N/A"}
-                        </td>
-                        <td style={styles.descriptionCell}>
-                          {follower.description || "N/A"}
-                        </td>
-                        {/* <td style={styles.tableCell}>
-                          {follower.statusText || "N/A"}
-                        </td> */}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        {index + 1}
+                      </td>
+                      <td
+                        style={{
+                          ...styles.tableCell,
+                          fontWeight: index < 3 ? "bold" : "normal",
+                        }}
+                      >
+                        <img
+                          src={follower.profile_image_url_https}
+                          alt={follower.name}
+                          style={{
+                            ...styles.profileImage,
+                            border: "2px solid #ddd", // Add a subtle border
+                            boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)", // Optional: add a slight shadow for depth
+                          }}
+                        />
+                      </td>
+                      <td
+                        style={{
+                          ...styles.tableCell,
+                          fontWeight: index < 3 ? "bold" : "normal",
+                        }}
+                      >
+                        <a
+                          href={`https://x.com/${follower.screen_name}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            textDecoration: "none",
+                            color: "blue",
+                          }}
+                        >
+                          {follower.name}
+                        </a>
+                      </td>
+                      <td
+                        style={{
+                          ...styles.tableCell,
+                          textAlign: "center",
+                          fontWeight: index < 3 ? "bold" : "normal",
+                        }}
+                      >
+                        {formatFollowers(follower.followers_count)}
+                      </td>
+                      <td
+                        style={{
+                          ...styles.tableCell,
+                          fontWeight: index < 3 ? "bold" : "normal",
+                        }}
+                      >
+                        {follower.location || "N/A"}
+                      </td>
+                      <td
+                        style={{
+                          ...styles.tableCell,
+                          fontWeight: index < 3 ? "bold" : "normal",
+                        }}
+                      >
+                        {follower.statusTime || "N/A"}
+                      </td>
+                      <td
+                        style={{
+                          ...styles.descriptionCell,
+                          fontWeight: index < 3 ? "bold" : "normal",
+                        }}
+                      >
+                        {follower.description || "N/A"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
@@ -496,11 +603,12 @@ const styles = {
     minHeight: "100vh",
   },
   title: {
-    fontSize: "36px",
-    fontWeight: "bold",
+    fontSize: "30px",
+    fontWeight: "normal",
     color: "#ff6347",
     textAlign: "center",
     marginBottom: "20px",
+    textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)",
   },
   form: {
     display: "flex",
@@ -520,7 +628,7 @@ const styles = {
   loading: { fontSize: "18px", textAlign: "center", color: "#ffa500" },
   error: { fontSize: "16px", color: "red", textAlign: "center" },
   result: {
-    fontSize: "18px",
+    fontSize: "14px",
     textAlign: "center",
     marginBottom: "20px",
     color: "#4b0082",

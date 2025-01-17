@@ -55,15 +55,21 @@
 .fetchMoreButton{
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007bff;
-    color: #fff;
+    /* background-color: #007bff; */
+    /* color: #fff; */
     border: none;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     cursor: pointer;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
 }
 
 .fetchMoreButton:hover{
-  background-color: #218838;
+  background: #218838;
 }
 
 .App-header {
