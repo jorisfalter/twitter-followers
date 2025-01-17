@@ -169,7 +169,7 @@ function App() {
     <div style={styles.container}>
       <h1 style={styles.title}>
         Build Better Relationships with Your{" "}
-        <i class="fa-brands fa-x-twitter"></i> Followers
+        <i className="fa-brands fa-x-twitter"></i> Followers
       </h1>
       <form style={styles.form}>
         <input
@@ -218,7 +218,7 @@ function App() {
             <div>
               <h2 style={styles.subtitle}>Here Are The Last 200 Followers:</h2>
               <h3 style={styles.subsubtitle}>
-                Highest Number of Followers First
+                (Highest Number of Followers First)
               </h3>
               <div
                 style={{
@@ -475,7 +475,7 @@ function App() {
 
 const styles = {
   container: {
-    padding: "100px",
+    padding: "20px 100px",
     fontFamily: "'Poppins', sans-serif",
     backgroundColor: "#f0f8ff",
     color: "#333",
