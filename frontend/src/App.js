@@ -157,7 +157,7 @@ function App() {
 
   const calculatePrice = (count) => {
     if (count <= 10000) {
-      return 4.99; // Price for 10,000 followers or less
+      return 4.96; // Price for 10,000 followers or less
     } else if (count <= 100000) {
       return 48.3; // Price for 100,000 followers or less
     } else if (count <= 1000000) {
@@ -248,70 +248,72 @@ function App() {
                   </button>
                 </div>
               )}
-              <table style={styles.table}>
-                <thead>
-                  <tr>
-                    <th style={styles.tableHeader}>#</th>
-                    <th style={styles.tableHeader}></th>
-                    <th style={styles.tableHeader}>Handle</th>
-                    <th style={styles.tableHeader}>Followers</th>
+              <div style={{ overflowX: "auto" }}>
+                <table style={styles.table}>
+                  <thead>
+                    <tr>
+                      <th style={styles.tableHeader}>#</th>
+                      <th style={styles.tableHeader}></th>
+                      <th style={styles.tableHeader}>Handle</th>
+                      <th style={styles.tableHeader}>Followers</th>
 
-                    <th style={styles.tableHeader}>Location</th>
-                    <th style={styles.tableHeader}>Last Post Or Reply</th>
-                    <th style={styles.tableHeader}>Description</th>
-                    {/* <th style={styles.tableHeader}>Last Tweet Content</th> */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((follower, index) => (
-                    <tr
-                      key={index}
-                      style={styles.tableRow}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style = styles.tableRowHover)
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style = styles.tableRow)
-                      }
-                    >
-                      <td style={styles.tableCell}>{index + 1}</td>
-                      <td style={styles.tableCell}>
-                        <img
-                          src={follower.profile_image_url_https}
-                          alt={follower.name}
-                          style={styles.profileImage}
-                        />
-                      </td>
-                      <td style={styles.tableCell}>
-                        <a
-                          href={`https://x.com/${follower.screen_name}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ textDecoration: "none", color: "blue" }}
-                        >
-                          {follower.name}
-                        </a>
-                      </td>
-                      <td style={styles.tableCell}>
-                        {formatFollowers(follower.followers_count)}
-                      </td>
-
-                      <td style={styles.tableCell}>
-                        {follower.location || "N/A"}
-                      </td>
-                      <td style={styles.tableCell}>
-                        {follower.statusTime || "N/A"}
-                      </td>
-                      <td style={styles.descriptionCell}>
-                        {follower.description || "N/A"}
-                      </td>
-                      {/* <td style={styles.tableCell}>
-                        {follower.statusText || "N/A"}
-                      </td> */}
+                      <th style={styles.tableHeader}>Location</th>
+                      <th style={styles.tableHeader}>Last Post Or Reply</th>
+                      <th style={styles.tableHeader}>Description</th>
+                      {/* <th style={styles.tableHeader}>Last Tweet Content</th> */}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {data.map((follower, index) => (
+                      <tr
+                        key={index}
+                        style={styles.tableRow}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style = styles.tableRowHover)
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style = styles.tableRow)
+                        }
+                      >
+                        <td style={styles.tableCell}>{index + 1}</td>
+                        <td style={styles.tableCell}>
+                          <img
+                            src={follower.profile_image_url_https}
+                            alt={follower.name}
+                            style={styles.profileImage}
+                          />
+                        </td>
+                        <td style={styles.tableCell}>
+                          <a
+                            href={`https://x.com/${follower.screen_name}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ textDecoration: "none", color: "blue" }}
+                          >
+                            {follower.name}
+                          </a>
+                        </td>
+                        <td style={styles.tableCell}>
+                          {formatFollowers(follower.followers_count)}
+                        </td>
+
+                        <td style={styles.tableCell}>
+                          {follower.location || "N/A"}
+                        </td>
+                        <td style={styles.tableCell}>
+                          {follower.statusTime || "N/A"}
+                        </td>
+                        <td style={styles.descriptionCell}>
+                          {follower.description || "N/A"}
+                        </td>
+                        {/* <td style={styles.tableCell}>
+                          {follower.statusText || "N/A"}
+                        </td> */}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>
@@ -349,13 +351,13 @@ function App() {
             ×
           </button>
           <h2>
-            It's only <strong>${calculatePrice(followerCount)}</strong> to see
-            the full list of {followerCount.toLocaleString()} Followers{" "}
+            Only <strong>${calculatePrice(followerCount)}</strong> to see the
+            full list of {followerCount.toLocaleString()} Followers{" "}
           </h2>
-          <p>Our pricing is variable. </p>
           <p>
-            The more followers, the more expensive for us it is to fetch them
-            <i>(the price of popularity ...)</i>
+            (Our pricing is variable. The more followers, the more expensive for
+            us it is to fetch them
+            <i>(the price of popularity ...))</i>
           </p>
           <button
             onClick={() => {
