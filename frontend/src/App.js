@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import Header from "./Header";
 
 // this is the react frontend
 
@@ -169,10 +170,26 @@ function App() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>
-        Build Better Relationships with Your{" "}
-        <i className="fa-brands fa-x-twitter"></i> Followers
+      <Header />
+      <h1 style={{ ...styles.title, marginTop: "25vh" }}>
+        Build Better Relationships with <br></br>
+        <b>
+          Your <i className="fa-brands fa-x-twitter"></i> Followers
+        </b>
       </h1>
+      <h2
+        style={{
+          textAlign: "center",
+          fontWeight: "normal",
+          fontSize: "20px",
+          color: "#555",
+          margin: "30px 0",
+        }}
+      >
+        The App Which Tells You Who Your Followers Are And What They Do,
+        <br></br>
+        So you can find leads and prospects with whom you have social rapport!
+      </h2>
       <form style={styles.form}>
         <input
           style={styles.input}
@@ -616,6 +633,7 @@ const styles = {
     alignItems: "center",
     gap: "10px",
     marginBottom: "20px",
+    marginTop: "50px",
   },
   input: {
     padding: "10px",
